@@ -8,7 +8,7 @@ function preload() {
 function setup() {
   createCanvas(900, 500);
   px = 450;
-  py = 300;
+  py = 298;
 }
 
 function draw() {
@@ -17,5 +17,5 @@ function draw() {
   
   fill(255, 220, 0);
   noStroke();
-  ellipse(px, py, 20, 20);
+  ellipse(px, py, 17, 17);
 }
