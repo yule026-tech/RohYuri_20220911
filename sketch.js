@@ -8,6 +8,7 @@ var score = 0; // 점수 변수
 var energy = 3; // 에너지 변수
 var enemies = []; // 적 배열
 var gameState = 'playing'; // 게임 상태
+var angle = 0; // 입 방향 각도
 
 function preload() {
   mapImg = loadImage('Map.png');
@@ -54,6 +55,7 @@ function resetGame() {
   score = 0; // 점수 변수
   energy = 3; // 에너지 변수
   gameState = 'playing'; // 게임 상태
+  angle = 0; // 입 방향 각도
   dots = [];
   enemies = [];
   
@@ -112,10 +114,10 @@ function draw() {
     
     isMoving = false;
     
-    if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) { px -= 2; isMoving = true; }
-    if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) { px += 2; isMoving = true; }
-    if (keyIsDown(UP_ARROW) || keyIsDown(87)) { py -= 2; isMoving = true; }
-    if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) { py += 2; isMoving = true; }
+    if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) { px -= 2; isMoving = true; angle = PI; }
+    if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) { px += 2; isMoving = true; angle = 0; }
+    if (keyIsDown(UP_ARROW) || keyIsDown(87)) { py -= 2; isMoving = true; angle = -HALF_PI; }
+    if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) { py += 2; isMoving = true; angle = HALF_PI; }
     
     // 벽 충돌 감지
     var c = get(px, py);
@@ -171,10 +173,11 @@ function draw() {
       }
     }
     
+    // 입 방향따라 그리기
     fill(255, 220, 0);
     noStroke();
     if (mouthOpen) {
-      arc(px, py, 17, 17, PI*1/4, PI*7/4, PIE);
+      arc(px, py, 17, 17, angle + PI*1/4, angle + PI*7/4, PIE);
     } else {
       ellipse(px, py, 17, 17);
     }
