@@ -7,6 +7,7 @@ var dots = [];
 var score = 0; // 점수 변수
 var energy = 3; // 에너지 변수
 var enemies = []; // 적 배열
+var gameState = 'playing'; // 게임 상태
 
 function preload() {
   mapImg = loadImage('Map.png');
@@ -64,79 +65,91 @@ function draw() {
   background(0);
   image(mapImg, 0, 0, 900, 500);
   
-  prevX = px;
-  prevY = py;
-  
-  isMoving = false;
-  
-  if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) { px -= 2; isMoving = true; }
-  if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) { px += 2; isMoving = true; }
-  if (keyIsDown(UP_ARROW) || keyIsDown(87)) { py -= 2; isMoving = true; }
-  if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) { py += 2; isMoving = true; }
-  
-  // 벽 충돌 감지
-  var c = get(px, py);
-  if (c[2] > 100) {
-    px = prevX;
-    py = prevY;
-  }
-  
-  // 좌우 끝 루프
-  if (px > 900) px = 0;
-  if (px < 0) px = 900;
-  
-  // 상하는 막힘
-  py = constrain(py, 0, 500);
-  
-  // 입 각도
-  if (isMoving) {
-    if (frameCount % 10 < 5) {
-      mouthOpen = true;
-    } else {
-      mouthOpen = false;
+  if (gameState == 'playing') {
+    prevX = px;
+    prevY = py;
+    
+    isMoving = false;
+    
+    if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) { px -= 2; isMoving = true; }
+    if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) { px += 2; isMoving = true; }
+    if (keyIsDown(UP_ARROW) || keyIsDown(87)) { py -= 2; isMoving = true; }
+    if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) { py += 2; isMoving = true; }
+    
+    // 벽 충돌 감지
+    var c = get(px, py);
+    if (c[2] > 100) {
+      px = prevX;
+      py = prevY;
     }
-  }
-  
-  // 콩 먹기
-  fill(255, 255, 255);
-  noStroke();
-  for (var i = 0; i < dots.length; i++) {
-    if (!dots[i].eaten) {
-      ellipse(dots[i].x, dots[i].y, 6, 6);
-      if (dist(px, py, dots[i].x, dots[i].y) < 10) {
-        dots[i].eaten = true;
-        score += 10; // 점수 추가
+    
+    // 좌우 끝 루프
+    if (px > 900) px = 0;
+    if (px < 0) px = 900;
+    
+    // 상하는 막힘
+    py = constrain(py, 0, 500);
+    
+    // 입 각도
+    if (isMoving) {
+      if (frameCount % 10 < 5) {
+        mouthOpen = true;
+      } else {
+        mouthOpen = false;
       }
     }
-  }
-  
-  // 적 그리기 및 충돌 감지
-  for (var i = enemies.length - 1; i >= 0; i--) {
-    fill(enemies[i].col);
-    noStroke();
-    ellipse(enemies[i].x, enemies[i].y, 17, 17);
     
-    // 충돌하면 적 사라지고 에너지 감소
-    if (dist(px, py, enemies[i].x, enemies[i].y) < 15) {
-      enemies.splice(i, 1);
-      energy--;
+    // 콩 먹기
+    fill(255, 255, 255);
+    noStroke();
+    for (var i = 0; i < dots.length; i++) {
+      if (!dots[i].eaten) {
+        ellipse(dots[i].x, dots[i].y, 6, 6);
+        if (dist(px, py, dots[i].x, dots[i].y) < 10) {
+          dots[i].eaten = true;
+          score += 10; // 점수 추가
+        }
+      }
     }
+    
+    for (var i = enemies.length - 1; i >= 0; i--) {
+      fill(enemies[i].col);
+      noStroke();
+      ellipse(enemies[i].x, enemies[i].y, 17, 17);
+      
+      if (dist(px, py, enemies[i].x, enemies[i].y) < 15) {
+        enemies.splice(i, 1);
+        energy--;
+      }
+    }
+    
+    fill(255, 220, 0);
+    noStroke();
+    if (mouthOpen) {
+      arc(px, py, 17, 17, PI*1/4, PI*7/4, PIE);
+    } else {
+      ellipse(px, py, 17, 17);
+    }
+    
+    // 점수 표시
+    fill(255);
+    textSize(16);
+    textAlign(LEFT);
+    text('SCORE: ' + score, 10, 20);
+    
+    // 에너지 표시
+    text('ENERGY: ' + energy, 10, 40);
+    
+    // 패배 조건
+    if (energy <= 0) gameState = 'lose';
+    
+  } else if (gameState == 'lose') {
+    // 패배 메시지
+    fill(255, 0, 0);
+    textSize(40);
+    textAlign(CENTER);
+    text('GAME OVER', 450, 220);
+    textSize(20);
+    text('SCORE: ' + score, 450, 270);
   }
-  
-  fill(255, 220, 0);
-  noStroke();
-  if (mouthOpen) {
-    arc(px, py, 17, 17, PI*1/4, PI*7/4, PIE);
-  } else {
-    ellipse(px, py, 17, 17);
-  }
-  
-  // 점수 표시
-  fill(255);
-  textSize(16);
-  textAlign(LEFT);
-  text('SCORE: ' + score, 10, 20);
-  
-  // 에너지 표시
-  text('ENERGY: ' + energy, 10, 40);
 }
