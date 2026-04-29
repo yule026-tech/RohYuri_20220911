@@ -2,6 +2,7 @@ var mapImg;
 var px, py;
 var prevX, prevY;
 var mouthOpen = true;
+var isMoving = false; // 이동 중인지 체크
 
 function preload() {
   mapImg = loadImage('Map.png');
@@ -9,6 +10,7 @@ function preload() {
 
 function setup() {
   createCanvas(900, 500);
+  frameRate(30);
   px = 450;
   py = 298;
   prevX = px;
@@ -22,10 +24,12 @@ function draw() {
   prevX = px;
   prevY = py;
   
-  if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) px -= 2;  // A
-  if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) px += 2; // D
-  if (keyIsDown(UP_ARROW) || keyIsDown(87)) py -= 2;    // W
-  if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) py += 2;  // S
+  isMoving = false; // 매 프레임 초기화
+  
+  if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) { px -= 2; isMoving = true; }  // A
+  if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) { px += 2; isMoving = true; } // D
+  if (keyIsDown(UP_ARROW) || keyIsDown(87)) { py -= 2; isMoving = true; }    // W
+  if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) { py += 2; isMoving = true; }  // S
   
   // 벽 충돌 감지
   var c = get(px, py);
@@ -41,11 +45,13 @@ function draw() {
   // 상하는 막힘
   py = constrain(py, 0, 500);
   
-  // 입 각도
-  if (frameCount % 10 < 5) {
-    mouthOpen = true;
-  } else {
-    mouthOpen = false;
+  // 입 각도 
+  if (isMoving) {
+    if (frameCount % 10 < 5) {
+      mouthOpen = true;
+    } else {
+      mouthOpen = false;
+    }
   }
   
   fill(255, 220, 0);
