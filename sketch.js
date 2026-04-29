@@ -4,21 +4,19 @@ var prevX, prevY;
 var mouthOpen = true;
 var isMoving = false;
 var dots = [];
+var score = 0; // 점수 변수
 
 function preload() {
   mapImg = loadImage('Map.png');
 }
 
 function isSafeDot(tx, ty) {
-  
   for (var dx = -10; dx <= 10; dx += 5) {
     for (var dy = -10; dy <= 10; dy += 5) {
       var origX = (tx + dx) * (2816 / 900);
       var origY = (ty + dy) * (1536 / 500);
       var tc = mapImg.get(origX, origY);
-
       if (tc[2] > 100 && (tc[0] > 30 || tc[1] > 30)) return false;
-      
       if (tc[2] < 50) return false;
     }
   }
@@ -33,14 +31,13 @@ function setup() {
   prevX = px;
   prevY = py;
   
-  // 콩 배치
   var attempt = 0;
   while (dots.length < 30 && attempt < 10000) {
     attempt++;
     var tx = random(20, 880);
     var ty = random(20, 480);
     if (isSafeDot(tx, ty)) {
-      dots.push({x: tx, y: ty});
+      dots.push({x: tx, y: ty, eaten: false});
     }
   }
 }
@@ -73,7 +70,7 @@ function draw() {
   // 상하는 막힘
   py = constrain(py, 0, 500);
   
-  // 입 각도
+  // 입 각도 
   if (isMoving) {
     if (frameCount % 10 < 5) {
       mouthOpen = true;
@@ -82,11 +79,18 @@ function draw() {
     }
   }
   
-  // 콩 그리기
+  // 콩 먹기
   fill(255, 255, 255);
   noStroke();
   for (var i = 0; i < dots.length; i++) {
-    ellipse(dots[i].x, dots[i].y, 6, 6);
+    if (!dots[i].eaten) {
+      ellipse(dots[i].x, dots[i].y, 6, 6);
+      
+      if (dist(px, py, dots[i].x, dots[i].y) < 10) {
+        dots[i].eaten = true;
+        score += 10; // 점수 추가
+      }
+    }
   }
   
   fill(255, 220, 0);
