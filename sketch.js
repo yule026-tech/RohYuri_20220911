@@ -26,6 +26,41 @@ function isSafeDot(tx, ty) {
   return true;
 }
 
+function setup() {
+  createCanvas(900, 500);
+  frameRate(30);
+  px = 450;
+  py = 298;
+  prevX = px;
+  prevY = py;
+  
+  // 콩 배치
+  var attempt = 0;
+  while (dots.length < 30 && attempt < 10000) {
+    attempt++;
+    var tx = random(20, 880);
+    var ty = random(20, 480);
+    if (isSafeDot(tx, ty)) {
+      dots.push({x: tx, y: ty, eaten: false});
+    }
+  }
+  
+  // 적 5개 랜덤 배치
+  var eAttempt = 0;
+  while (enemies.length < 5 && eAttempt < 10000) {
+    eAttempt++;
+    var ex = random(20, 880);
+    var ey = random(20, 480);
+    if (isSafeDot(ex, ey)) {
+      enemies.push({
+        x: ex,
+        y: ey,
+        col: color(random(150, 255), 0, random(150, 255))
+      });
+    }
+  }
+}
+
 function resetGame() {
   // 게임 초기화
   px = 450;
@@ -65,44 +100,9 @@ function resetGame() {
   }
 }
 
-function setup() {
-  createCanvas(900, 500);
-  frameRate(30);
-  px = 450;
-  py = 298;
-  prevX = px;
-  prevY = py;
-  
-  // 콩 배치
-  var attempt = 0;
-  while (dots.length < 30 && attempt < 10000) {
-    attempt++;
-    var tx = random(20, 880);
-    var ty = random(20, 480);
-    if (isSafeDot(tx, ty)) {
-      dots.push({x: tx, y: ty, eaten: false});
-    }
-  }
-  
-  // 적 5개 랜덤 배치
-  var eAttempt = 0;
-  while (enemies.length < 5 && eAttempt < 10000) {
-    eAttempt++;
-    var ex = random(20, 880);
-    var ey = random(20, 480);
-    if (isSafeDot(ex, ey)) {
-      enemies.push({
-        x: ex,
-        y: ey,
-        col: color(random(150, 255), 0, random(150, 255))
-      });
-    }
-  }
-}
-
 function keyPressed() {
-  // 엔터로 재시작 시도
-  if (keyCode == ENTER && gameState != 'playing') {
+  // 스페이스로 재시작
+  if (key == ' ' && gameState != 'playing') {
     resetGame();
   }
 }
@@ -205,7 +205,7 @@ function draw() {
     textSize(20);
     text('SCORE: ' + score, 450, 270);
     fill(255);
-    text('ENTER로 다시 시작', 450, 310);
+    text('SPACE로 다시 시작', 450, 310);
     
   } else if (gameState == 'lose') {
     // 패배 메시지
@@ -216,6 +216,6 @@ function draw() {
     textSize(20);
     text('SCORE: ' + score, 450, 270);
     fill(255);
-    text('ENTER로 다시 시작', 450, 310);
+    text('SPACE로 다시 시작', 450, 310);
   }
 }
