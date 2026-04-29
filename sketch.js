@@ -33,6 +33,7 @@ function setup() {
   prevX = px;
   prevY = py;
   
+  // 콩 배치
   var attempt = 0;
   while (dots.length < 30 && attempt < 10000) {
     attempt++;
@@ -44,12 +45,18 @@ function setup() {
   }
   
   // 적 5개 랜덤 배치
-  for (var i = 0; i < 5; i++) {
-    enemies.push({
-      x: random(50, 850),
-      y: random(50, 450),
-      col: color(random(150, 255), 0, random(150, 255))
-    });
+  var eAttempt = 0;
+  while (enemies.length < 5 && eAttempt < 10000) {
+    eAttempt++;
+    var ex = random(20, 880);
+    var ey = random(20, 480);
+    if (isSafeDot(ex, ey)) {
+      enemies.push({
+        x: ex,
+        y: ey,
+        col: color(random(150, 255), 0, random(150, 255))
+      });
+    }
   }
 }
 
@@ -103,11 +110,17 @@ function draw() {
     }
   }
   
-  // 적 그리기
-  for (var i = 0; i < enemies.length; i++) {
+  // 적 그리기 및 충돌 감지
+  for (var i = enemies.length - 1; i >= 0; i--) {
     fill(enemies[i].col);
     noStroke();
     ellipse(enemies[i].x, enemies[i].y, 17, 17);
+    
+    // 충돌하면 적 사라지고 에너지 감소
+    if (dist(px, py, enemies[i].x, enemies[i].y) < 15) {
+      enemies.splice(i, 1);
+      energy--;
+    }
   }
   
   fill(255, 220, 0);
