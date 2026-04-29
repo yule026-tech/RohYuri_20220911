@@ -2,7 +2,8 @@ var mapImg;
 var px, py;
 var prevX, prevY;
 var mouthOpen = true;
-var isMoving = false; // 이동 중인지 체크
+var isMoving = false;
+var dots = []; // 콩 배열
 
 function preload() {
   mapImg = loadImage('Map.png');
@@ -15,6 +16,11 @@ function setup() {
   py = 298;
   prevX = px;
   prevY = py;
+  
+  // 콩 배치
+  for (var i = 0; i < 10; i++) {
+    dots.push({x: random(50, 850), y: random(50, 450)});
+  }
 }
 
 function draw() {
@@ -24,12 +30,12 @@ function draw() {
   prevX = px;
   prevY = py;
   
-  isMoving = false; // 매 프레임 초기화
+  isMoving = false;
   
-  if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) { px -= 2; isMoving = true; }  // A
-  if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) { px += 2; isMoving = true; } // D
-  if (keyIsDown(UP_ARROW) || keyIsDown(87)) { py -= 2; isMoving = true; }    // W
-  if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) { py += 2; isMoving = true; }  // S
+  if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) { px -= 2; isMoving = true; }
+  if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) { px += 2; isMoving = true; }
+  if (keyIsDown(UP_ARROW) || keyIsDown(87)) { py -= 2; isMoving = true; }
+  if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) { py += 2; isMoving = true; }
   
   // 벽 충돌 감지
   var c = get(px, py);
@@ -45,13 +51,20 @@ function draw() {
   // 상하는 막힘
   py = constrain(py, 0, 500);
   
-  // 입 각도 
+  // 입 각도
   if (isMoving) {
     if (frameCount % 10 < 5) {
       mouthOpen = true;
     } else {
       mouthOpen = false;
     }
+  }
+  
+  // 콩 그리기
+  fill(255, 255, 255);
+  noStroke();
+  for (var i = 0; i < dots.length; i++) {
+    ellipse(dots[i].x, dots[i].y, 6, 6);
   }
   
   fill(255, 220, 0);
