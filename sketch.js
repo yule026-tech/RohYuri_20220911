@@ -124,7 +124,7 @@ function draw() {
     if (keyIsDown(UP_ARROW) || keyIsDown(87)) { py -= 2; isMoving = true; angle = -HALF_PI; }
     if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) { py += 2; isMoving = true; angle = HALF_PI; }
     
-    // 벽 충돌 감지 - 팩맨 주변 8픽셀 체크
+    // 벽 충돌 감지
     if (isWall(px + 8, py) || isWall(px - 8, py) ||
         isWall(px, py + 8) || isWall(px, py - 8)) {
       px = prevX;
