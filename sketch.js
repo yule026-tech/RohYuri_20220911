@@ -6,6 +6,7 @@ var isMoving = false;
 var dots = [];
 var score = 0; // 점수 변수
 var energy = 3; // 에너지 변수
+var enemies = []; // 적 배열
 
 function preload() {
   mapImg = loadImage('Map.png');
@@ -40,6 +41,15 @@ function setup() {
     if (isSafeDot(tx, ty)) {
       dots.push({x: tx, y: ty, eaten: false});
     }
+  }
+  
+  // 적 5개 랜덤 배치
+  for (var i = 0; i < 5; i++) {
+    enemies.push({
+      x: random(50, 850),
+      y: random(50, 450),
+      col: color(random(150, 255), 0, random(150, 255))
+    });
   }
 }
 
@@ -91,6 +101,13 @@ function draw() {
         score += 10; // 점수 추가
       }
     }
+  }
+  
+  // 적 그리기
+  for (var i = 0; i < enemies.length; i++) {
+    fill(enemies[i].col);
+    noStroke();
+    ellipse(enemies[i].x, enemies[i].y, 17, 17);
   }
   
   fill(255, 220, 0);
