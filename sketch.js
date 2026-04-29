@@ -26,13 +26,17 @@ function isSafeDot(tx, ty) {
   return true;
 }
 
-function setup() {
-  createCanvas(900, 500);
-  frameRate(30);
+function resetGame() {
+  // 게임 초기화
   px = 450;
   py = 298;
   prevX = px;
   prevY = py;
+  score = 0; // 점수 변수
+  energy = 3; // 에너지 변수
+  gameState = 'playing'; // 게임 상태
+  dots = [];
+  enemies = [];
   
   // 콩 배치
   var attempt = 0;
@@ -61,17 +65,13 @@ function setup() {
   }
 }
 
-function resetGame() {
-  // 게임 초기화
+function setup() {
+  createCanvas(900, 500);
+  frameRate(30);
   px = 450;
   py = 298;
   prevX = px;
   prevY = py;
-  score = 0; // 점수 변수
-  energy = 3; // 에너지 변수
-  gameState = 'playing'; // 게임 상태
-  dots = [];
-  enemies = [];
   
   // 콩 배치
   var attempt = 0;
@@ -184,7 +184,13 @@ function draw() {
     text('SCORE: ' + score, 10, 20);
     
     // 에너지 표시
-    text('ENERGY: ' + energy, 10, 40);
+    var hearts = '';
+    for (var i = 0; i < energy; i++) {
+      hearts += '♥ ';
+    }
+    fill(255, 0, 0);
+    textSize(16);
+    text(hearts, 10, 40);
     
     // 승리 조건
     var allEaten = true;
