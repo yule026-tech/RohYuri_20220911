@@ -5,6 +5,7 @@ var mouthOpen = true;
 var isMoving = false;
 var dots = [];
 var score = 0; // 점수 변수
+var energy = 3; // 에너지 변수
 
 function preload() {
   mapImg = loadImage('Map.png');
@@ -105,4 +106,7 @@ function draw() {
   textSize(16);
   textAlign(LEFT);
   text('SCORE: ' + score, 10, 20);
+  
+  // 에너지 표시
+  text('ENERGY: ' + energy, 10, 40);
 }
