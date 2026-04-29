@@ -70,7 +70,7 @@ function draw() {
   // 상하는 막힘
   py = constrain(py, 0, 500);
   
-  // 입 각도 
+  // 입 각도
   if (isMoving) {
     if (frameCount % 10 < 5) {
       mouthOpen = true;
@@ -85,7 +85,6 @@ function draw() {
   for (var i = 0; i < dots.length; i++) {
     if (!dots[i].eaten) {
       ellipse(dots[i].x, dots[i].y, 6, 6);
-      
       if (dist(px, py, dots[i].x, dots[i].y) < 10) {
         dots[i].eaten = true;
         score += 10; // 점수 추가
@@ -100,4 +99,10 @@ function draw() {
   } else {
     ellipse(px, py, 17, 17);
   }
+  
+  // 점수 표시
+  fill(255);
+  textSize(16);
+  textAlign(LEFT);
+  text('SCORE: ' + score, 10, 20);
 }
