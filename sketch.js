@@ -26,6 +26,45 @@ function isSafeDot(tx, ty) {
   return true;
 }
 
+function resetGame() {
+  // 게임 초기화
+  px = 450;
+  py = 298;
+  prevX = px;
+  prevY = py;
+  score = 0; // 점수 변수
+  energy = 3; // 에너지 변수
+  gameState = 'playing'; // 게임 상태
+  dots = [];
+  enemies = [];
+  
+  // 콩 배치
+  var attempt = 0;
+  while (dots.length < 30 && attempt < 10000) {
+    attempt++;
+    var tx = random(20, 880);
+    var ty = random(20, 480);
+    if (isSafeDot(tx, ty)) {
+      dots.push({x: tx, y: ty, eaten: false});
+    }
+  }
+  
+  // 적 5개 랜덤 배치
+  var eAttempt = 0;
+  while (enemies.length < 5 && eAttempt < 10000) {
+    eAttempt++;
+    var ex = random(20, 880);
+    var ey = random(20, 480);
+    if (isSafeDot(ex, ey)) {
+      enemies.push({
+        x: ex,
+        y: ey,
+        col: color(random(150, 255), 0, random(150, 255))
+      });
+    }
+  }
+}
+
 function setup() {
   createCanvas(900, 500);
   frameRate(30);
@@ -58,6 +97,13 @@ function setup() {
         col: color(random(150, 255), 0, random(150, 255))
       });
     }
+  }
+}
+
+function keyPressed() {
+  // 엔터로 재시작 시도
+  if (keyCode == ENTER && gameState != 'playing') {
+    resetGame();
   }
 }
 
@@ -147,7 +193,7 @@ function draw() {
     }
     if (allEaten) gameState = 'win';
     
-    // 패배 조건 
+    // 패배 조건
     if (energy <= 0) gameState = 'lose';
     
   } else if (gameState == 'win') {
@@ -158,6 +204,8 @@ function draw() {
     text('YOU WIN!', 450, 220);
     textSize(20);
     text('SCORE: ' + score, 450, 270);
+    fill(255);
+    text('ENTER로 다시 시작', 450, 310);
     
   } else if (gameState == 'lose') {
     // 패배 메시지
@@ -167,5 +215,7 @@ function draw() {
     text('GAME OVER', 450, 220);
     textSize(20);
     text('SCORE: ' + score, 450, 270);
+    fill(255);
+    text('ENTER로 다시 시작', 450, 310);
   }
 }
