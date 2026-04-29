@@ -1,6 +1,7 @@
 var mapImg;
 var px, py;
 var prevX, prevY;
+var mouthOpen = true;
 
 function preload() {
   mapImg = loadImage('Map.png');
@@ -41,7 +42,17 @@ function draw() {
   py = constrain(py, 0, 500);
   
   // 입 각도
+  if (frameCount % 10 < 5) {
+    mouthOpen = true;
+  } else {
+    mouthOpen = false;
+  }
+  
   fill(255, 220, 0);
   noStroke();
-  arc(px, py, 17, 17, PI*1/4, PI*2, PIE);
+  if (mouthOpen) {
+    arc(px, py, 17, 17, PI*1/4, PI*7/4, PIE);
+  } else {
+    ellipse(px, py, 17, 17);
+  }
 }
