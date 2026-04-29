@@ -3,7 +3,7 @@ var px, py;
 var prevX, prevY;
 var mouthOpen = true;
 var isMoving = false;
-var dots = []; // 콩 배열
+var dots = [];
 
 function preload() {
   mapImg = loadImage('Map.png');
@@ -17,9 +17,20 @@ function setup() {
   prevX = px;
   prevY = py;
   
-  // 콩 배치
-  for (var i = 0; i < 10; i++) {
-    dots.push({x: random(50, 850), y: random(50, 450)});
+  // 콩 배치 
+  var attempt = 0;
+  while (dots.length < 30 && attempt < 10000) {
+    attempt++;
+    var tx = random(10, 890);
+    var ty = random(10, 490);
+    //사진사이즈 변환시킴
+    var origX = tx * (2816 / 900);
+    var origY = ty * (1536 / 500);
+    var tc = mapImg.get(origX, origY);
+
+    if (tc[2] > 50 && tc[0] < 20 && tc[1] < 20) {
+      dots.push({x: tx, y: ty});
+    }
   }
 }
 
@@ -51,7 +62,7 @@ function draw() {
   // 상하는 막힘
   py = constrain(py, 0, 500);
   
-  // 입 각도
+  // 입 각도 
   if (isMoving) {
     if (frameCount % 10 < 5) {
       mouthOpen = true;
