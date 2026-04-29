@@ -40,9 +40,9 @@ function resetGame() {
   dots = [];
   enemies = [];
   
-  // 콩 배치
+  // 콩 배치 (20개)
   var attempt = 0;
-  while (dots.length < 30 && attempt < 10000) {
+  while (dots.length < 20 && attempt < 10000) {
     attempt++;
     var tx = random(20, 880);
     var ty = random(20, 480);
@@ -75,9 +75,9 @@ function setup() {
   prevX = px;
   prevY = py;
   
-  // 콩 배치
+  // 콩 배치 (20개)
   var attempt = 0;
-  while (dots.length < 30 && attempt < 10000) {
+  while (dots.length < 20 && attempt < 10000) {
     attempt++;
     var tx = random(20, 880);
     var ty = random(20, 480);
@@ -157,16 +157,17 @@ function draw() {
           dots[i].eaten = true;
           score += 10; // 점수 추가
           
-          // 점수 오를수록 적 증가
-          if (score % 100 == 0) {
-            enemyCount++;
+          // 점수 오를수록 적 증가 (50점마다 1개씩)
+          if (score == 50 || score == 100 || score == 150) {
             var ex = random(20, 880);
             var ey = random(20, 480);
-            enemies.push({
-              x: ex,
-              y: ey,
-              col: color(random(150, 255), 0, random(150, 255))
-            });
+            if (isSafeDot(ex, ey)) {
+              enemies.push({
+                x: ex,
+                y: ey,
+                col: color(random(150, 255), 0, random(150, 255))
+              });
+            }
           }
         }
       }
@@ -206,12 +207,8 @@ function draw() {
     textSize(16);
     text(hearts, 10, 40);
     
-    // 승리 조건
-    var allEaten = true;
-    for (var i = 0; i < dots.length; i++) {
-      if (!dots[i].eaten) allEaten = false;
-    }
-    if (allEaten) gameState = 'win';
+    // 승리 조건 - 200점
+    if (score >= 200) gameState = 'win';
     
     // 패배 조건
     if (energy <= 0) gameState = 'lose';
