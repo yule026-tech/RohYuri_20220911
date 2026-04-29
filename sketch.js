@@ -8,7 +8,6 @@ var score = 0; // 점수 변수
 var energy = 3; // 에너지 변수
 var enemies = []; // 적 배열
 var gameState = 'playing'; // 게임 상태
-var enemyCount = 5; // 적 수
 
 function preload() {
   mapImg = loadImage('Map.png');
@@ -27,6 +26,25 @@ function isSafeDot(tx, ty) {
   return true;
 }
 
+function spawnEnemies(count) {
+  // 적 count개 추가 생성
+  var added = 0;
+  var attempt = 0;
+  while (added < count && attempt < 10000) {
+    attempt++;
+    var ex = random(20, 880);
+    var ey = random(20, 480);
+    if (isSafeDot(ex, ey)) {
+      enemies.push({
+        x: ex,
+        y: ey,
+        col: color(random(150, 255), 0, random(150, 255))
+      });
+      added++;
+    }
+  }
+}
+
 function resetGame() {
   // 게임 초기화
   px = 450;
@@ -36,7 +54,6 @@ function resetGame() {
   score = 0; // 점수 변수
   energy = 3; // 에너지 변수
   gameState = 'playing'; // 게임 상태
-  enemyCount = 5; // 적 수
   dots = [];
   enemies = [];
   
@@ -52,19 +69,7 @@ function resetGame() {
   }
   
   // 적 5개 랜덤 배치
-  var eAttempt = 0;
-  while (enemies.length < enemyCount && eAttempt < 10000) {
-    eAttempt++;
-    var ex = random(20, 880);
-    var ey = random(20, 480);
-    if (isSafeDot(ex, ey)) {
-      enemies.push({
-        x: ex,
-        y: ey,
-        col: color(random(150, 255), 0, random(150, 255))
-      });
-    }
-  }
+  spawnEnemies(5);
 }
 
 function setup() {
@@ -87,19 +92,7 @@ function setup() {
   }
   
   // 적 5개 랜덤 배치
-  var eAttempt = 0;
-  while (enemies.length < enemyCount && eAttempt < 10000) {
-    eAttempt++;
-    var ex = random(20, 880);
-    var ey = random(20, 480);
-    if (isSafeDot(ex, ey)) {
-      enemies.push({
-        x: ex,
-        y: ey,
-        col: color(random(150, 255), 0, random(150, 255))
-      });
-    }
-  }
+  spawnEnemies(5);
 }
 
 function keyPressed() {
@@ -157,18 +150,12 @@ function draw() {
           dots[i].eaten = true;
           score += 10; // 점수 추가
           
-          // 점수 오를수록 적 증가 (50점마다 1개씩)
-          if (score == 50 || score == 100 || score == 150) {
-            var ex = random(20, 880);
-            var ey = random(20, 480);
-            if (isSafeDot(ex, ey)) {
-              enemies.push({
-                x: ex,
-                y: ey,
-                col: color(random(150, 255), 0, random(150, 255))
-              });
-            }
-          }
+          // 50점 - 적 1개 추가
+          if (score == 50) spawnEnemies(1);
+          // 100점 - 적 2개 추가
+          if (score == 100) spawnEnemies(2);
+          // 150점 - 적 3개 추가
+          if (score == 150) spawnEnemies(3);
         }
       }
     }
