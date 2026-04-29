@@ -8,6 +8,7 @@ var score = 0; // 점수 변수
 var energy = 3; // 에너지 변수
 var enemies = []; // 적 배열
 var gameState = 'playing'; // 게임 상태
+var enemyCount = 5; // 적 수
 
 function preload() {
   mapImg = loadImage('Map.png');
@@ -35,6 +36,7 @@ function resetGame() {
   score = 0; // 점수 변수
   energy = 3; // 에너지 변수
   gameState = 'playing'; // 게임 상태
+  enemyCount = 5; // 적 수
   dots = [];
   enemies = [];
   
@@ -51,7 +53,7 @@ function resetGame() {
   
   // 적 5개 랜덤 배치
   var eAttempt = 0;
-  while (enemies.length < 5 && eAttempt < 10000) {
+  while (enemies.length < enemyCount && eAttempt < 10000) {
     eAttempt++;
     var ex = random(20, 880);
     var ey = random(20, 480);
@@ -86,7 +88,7 @@ function setup() {
   
   // 적 5개 랜덤 배치
   var eAttempt = 0;
-  while (enemies.length < 5 && eAttempt < 10000) {
+  while (enemies.length < enemyCount && eAttempt < 10000) {
     eAttempt++;
     var ex = random(20, 880);
     var ey = random(20, 480);
@@ -154,6 +156,18 @@ function draw() {
         if (dist(px, py, dots[i].x, dots[i].y) < 10) {
           dots[i].eaten = true;
           score += 10; // 점수 추가
+          
+          // 점수 오를수록 적 증가
+          if (score % 100 == 0) {
+            enemyCount++;
+            var ex = random(20, 880);
+            var ey = random(20, 480);
+            enemies.push({
+              x: ex,
+              y: ey,
+              col: color(random(150, 255), 0, random(150, 255))
+            });
+          }
         }
       }
     }
