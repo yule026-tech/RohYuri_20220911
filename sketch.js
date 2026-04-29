@@ -9,6 +9,22 @@ function preload() {
   mapImg = loadImage('Map.png');
 }
 
+function isSafeDot(tx, ty) {
+  
+  for (var dx = -10; dx <= 10; dx += 5) {
+    for (var dy = -10; dy <= 10; dy += 5) {
+      var origX = (tx + dx) * (2816 / 900);
+      var origY = (ty + dy) * (1536 / 500);
+      var tc = mapImg.get(origX, origY);
+
+      if (tc[2] > 100 && (tc[0] > 30 || tc[1] > 30)) return false;
+      
+      if (tc[2] < 50) return false;
+    }
+  }
+  return true;
+}
+
 function setup() {
   createCanvas(900, 500);
   frameRate(30);
@@ -17,18 +33,13 @@ function setup() {
   prevX = px;
   prevY = py;
   
-  // 콩 배치 
+  // 콩 배치
   var attempt = 0;
   while (dots.length < 30 && attempt < 10000) {
     attempt++;
-    var tx = random(10, 890);
-    var ty = random(10, 490);
-    //사진사이즈 변환시킴
-    var origX = tx * (2816 / 900);
-    var origY = ty * (1536 / 500);
-    var tc = mapImg.get(origX, origY);
-
-    if (tc[2] > 50 && tc[0] < 20 && tc[1] < 20) {
+    var tx = random(20, 880);
+    var ty = random(20, 480);
+    if (isSafeDot(tx, ty)) {
       dots.push({x: tx, y: ty});
     }
   }
@@ -62,7 +73,7 @@ function draw() {
   // 상하는 막힘
   py = constrain(py, 0, 500);
   
-  // 입 각도 
+  // 입 각도
   if (isMoving) {
     if (frameCount % 10 < 5) {
       mouthOpen = true;
