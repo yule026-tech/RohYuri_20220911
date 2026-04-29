@@ -140,8 +140,24 @@ function draw() {
     // 에너지 표시
     text('ENERGY: ' + energy, 10, 40);
     
-    // 패배 조건
+    // 승리 조건
+    var allEaten = true;
+    for (var i = 0; i < dots.length; i++) {
+      if (!dots[i].eaten) allEaten = false;
+    }
+    if (allEaten) gameState = 'win';
+    
+    // 패배 조건 
     if (energy <= 0) gameState = 'lose';
+    
+  } else if (gameState == 'win') {
+    // 승리 메시지
+    fill(255, 220, 0);
+    textSize(40);
+    textAlign(CENTER);
+    text('YOU WIN!', 450, 220);
+    textSize(20);
+    text('SCORE: ' + score, 450, 270);
     
   } else if (gameState == 'lose') {
     // 패배 메시지
