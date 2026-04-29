@@ -27,6 +27,11 @@ function isSafeDot(tx, ty) {
   return true;
 }
 
+function isWall(x, y) {
+  var c = get(x, y);
+  return c[2] > 100;
+}
+
 function spawnEnemies(count) {
   // 적 count개 추가 생성
   var added = 0;
@@ -119,9 +124,9 @@ function draw() {
     if (keyIsDown(UP_ARROW) || keyIsDown(87)) { py -= 2; isMoving = true; angle = -HALF_PI; }
     if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) { py += 2; isMoving = true; angle = HALF_PI; }
     
-    // 벽 충돌 감지
-    var c = get(px, py);
-    if (c[2] > 100) {
+    // 벽 충돌 감지 - 팩맨 주변 8픽셀 체크
+    if (isWall(px + 8, py) || isWall(px - 8, py) ||
+        isWall(px, py + 8) || isWall(px, py - 8)) {
       px = prevX;
       py = prevY;
     }
