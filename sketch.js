@@ -40,7 +40,8 @@ function draw() {
   // 상하는 막힘
   py = constrain(py, 0, 500);
   
+  // 입 각도
   fill(255, 220, 0);
   noStroke();
-  ellipse(px, py, 17, 17);
+  arc(px, py, 17, 17, PI*1/4, PI*2, PIE);
 }
