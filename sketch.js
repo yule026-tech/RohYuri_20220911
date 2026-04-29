@@ -1,6 +1,6 @@
 var mapImg;
 var px, py;
-var prevX, prevY; 
+var prevX, prevY;
 
 function preload() {
   mapImg = loadImage('Map.png');
@@ -18,24 +18,26 @@ function draw() {
   background(0);
   image(mapImg, 0, 0, 900, 500);
   
-  // 이전 위치 저장
   prevX = px;
   prevY = py;
   
-  // WASD 또는 방향키로 이동
   if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) px -= 2;  // A
   if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) px += 2; // D
   if (keyIsDown(UP_ARROW) || keyIsDown(87)) py -= 2;    // W
   if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) py += 2;  // S
   
-
+  // 벽 충돌 감지
   var c = get(px, py);
   if (c[2] > 100) {
     px = prevX;
     py = prevY;
   }
   
-  px = constrain(px, 0, 900);
+  // 좌우 끝 루프
+  if (px > 900) px = 0;
+  if (px < 0) px = 900;
+  
+  // 상하는 막힘
   py = constrain(py, 0, 500);
   
   fill(255, 220, 0);
